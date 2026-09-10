@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sense.app.base.rule.mapper.RuleRunMapper">
+
+    <!--分页查询运行日志（关联规则表和分类表）-->
+    <select id="queryRunLogPage" resultType="com.sense.app.base.rule.domain.BaseRuleRun">
+        select
+            l.*,
+            r.rule_code, r.rule_name,
+            f.folder_name
+        from base_rule_run l
+        left join base_rule r on l.rule_id = r.id
+        left join base_rule_folder f on r.folder_id = f.id
+        where 1=1
+        <if test="ruleCode != null and ruleCode != ''">
+            and r.rule_code like concat('%', #{ruleCode}, '%')
+        </if>
+        <if test="ruleName != null and ruleName != ''">
+            and r.rule_name like concat('%', #{ruleName}, '%')
+        </if>
+        order by l.start_date desc
+    </select>
+
+</mapper>

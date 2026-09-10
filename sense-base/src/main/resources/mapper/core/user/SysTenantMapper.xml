@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sense.app.core.user.mapper.SysTenantMapper">
+
+    <!--查询某用户的入驻租户列表-->
+    <select id="queryUserTenant" resultType="com.sense.app.core.user.domain.SysTenant">
+        SELECT *
+        FROM core_sys_tenant
+        WHERE ID IN (
+	        SELECT TENANT_ID FROM core_sys_user_tenant where USER_ID = #{userId}
+        )
+    </select>
+</mapper>

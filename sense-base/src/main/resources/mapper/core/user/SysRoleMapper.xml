@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sense.app.core.user.mapper.SysRoleMapper">
+
+    <!--查询某用户在某租户下的角色列表-->
+    <select id="queryUserRoleList" resultType="com.sense.app.core.user.domain.SysRole">
+        select *
+        from core_sys_role
+        where ID in (
+            select ROLE_ID
+            from core_sys_user_role
+            where USER_ID = #{userId}
+            and TENANT_ID = #{tenantId}
+        )
+    </select>
+
+    <!--查询某租户下某角色-->
+    <select id="querySysRoleByCode" resultType="com.sense.app.core.user.domain.SysRole">
+        select *
+        from core_sys_role
+        where role_code = #{roleCode}
+        and tenant_id = #{tenantId}
+    </select>
+
+    <!--忽略租户查询角色信息-->
+    <select id="querySysRoleIgnoreTenant" resultType="com.sense.app.core.user.domain.SysRole">
+        select *
+        from core_sys_role
+        where id in
+        <foreach collection="ids" item="id" index="" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

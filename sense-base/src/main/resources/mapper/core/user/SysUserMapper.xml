@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sense.app.core.user.mapper.SysUserMapper">
+
+    <!--根据登录名查询用户信息-->
+    <select id="queryUserByLoginname" resultType="com.sense.app.core.user.domain.SysUser">
+        select * from core_sys_user where username = #{loginName}
+    </select>
+
+    <!--根据手机号查询用户信息-->
+    <select id="queryUserByPhone" resultType="com.sense.app.core.user.domain.SysUser">
+        select * from core_sys_user where phone = #{phone}
+    </select>
+
+    <!--根据邮箱查询用户信息-->
+    <select id="queryUserByEmail" resultType="com.sense.app.core.user.domain.SysUser">
+        select * from core_sys_user where email = #{email}
+    </select>
+
+    <!--查询指定租户下的所有用户-->
+    <select id="queryUsers" resultType="com.sense.app.core.user.domain.SysUser">
+      select u.ID,
+               u.username,
+               u.NAME,
+               u.SEX,
+               u.LOCKED,
+               u.ENABLED,
+               u.PHONE,
+               u.EMAIL,
+               u.LOCAL,
+               t.TENANT_ID
+        from core_sys_user_tenant t
+        left join core_sys_user u on t.USER_ID = u.id
+        where t.TENANT_ID = #{tenantId} and u.id is not null
+        <if test="username != null and username != ''">
+            and u.username like concat(concat('%',#{username}),'%')
+        </if>
+        <if test="name != null and name != ''">
+            and u.NAME like concat(concat('%',#{name}),'%')
+        </if>
+        <if test="phone != null and phone != ''">
+            and u.PHONE like concat(concat('%',#{phone}),'%')
+        </if>
+        <if test="enabled != null and enabled != ''">
+            and u.ENABLED = #{enabled}
+        </if>
+    </select>
+
+    <!--更新用户启用状态-->
+    <update id="updateUserEnabled">
+        update sys_user set ENABLED = #{enabled}
+        where id in
+        <foreach collection="ids" item="id" index="" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sense.app.core.system.mapper.CoreSysMenuRoleMapper">
+
+    <!--查询角色下分配的菜单信息-->
+    <select id="queryMenuByRoleId" resultType="com.sense.app.core.system.domain.CoreSysMenu">
+        select
+            m.*,
+            rm.menu_alias_name
+        from core_sys_menu_role rm
+        left join core_sys_menu m on rm.menu_id = m.id
+        where rm.role_id = #{roleId}
+        order by m.sort_order
+    </select>
+</mapper>

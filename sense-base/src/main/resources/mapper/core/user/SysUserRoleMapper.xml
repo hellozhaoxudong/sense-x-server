@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sense.app.core.user.mapper.SysUserRoleMapper">
+
+    <!--查询用户的角色信息-->
+    <select id="queryUserRoles" resultType="com.sense.app.core.user.domain.SysUserRole">
+        select ur.USER_ID,
+               ur.ROLE_ID,
+               r.ROLE_CODE,
+               r.ROLE_NAME
+        from core_sys_user_role ur
+        left join core_sys_role r on ur.ROLE_ID = r.ID
+        where ur.USER_ID in
+        <foreach collection="userIds" item="userId" index="" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </select>
+</mapper>
